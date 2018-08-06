@@ -14,14 +14,14 @@ public class Test {
     public static void main(String[] args) {
         ProtostuffRedisSerializer serializer = new ProtostuffRedisSerializer();
         List<DataObject> list = new ArrayList<>();
-        for (int i = 0; i < 10000; ++i) {
+        for (int i = 0; i < 10; ++i) {
             list.add(DataObject.buildOne());
         }
 
         long t1 = System.currentTimeMillis();
         byte[] proBytes = serializer.serialize(list);
         long t2 = System.currentTimeMillis();
-        Object proDes = serializer.deserialize(proBytes);
+        List<DataObject> proDes = (List<DataObject>) serializer.deserialize(proBytes);
         long t3 = System.currentTimeMillis();
 //=====================
         String json = JSON.toJSONString(list);
@@ -35,7 +35,8 @@ public class Test {
         System.out.println("json des: " + (t5 - t4));
 
         System.out.println("========");
-//        System.out.println(proDes);
-//        System.out.println(list1);
+        System.out.println(proDes);
+        System.out.println(list1);
+        System.out.println(proDes.get(0).getTimestamp());
     }
 }

@@ -3,9 +3,14 @@ package com.simple.serializer;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
+import io.protostuff.runtime.DefaultIdStrategy;
+import io.protostuff.runtime.Delegate;
+import io.protostuff.runtime.RuntimeEnv;
 import io.protostuff.runtime.RuntimeSchema;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
+
+import java.sql.Timestamp;
 
 /**
  * User: tanhuayou
@@ -13,6 +18,13 @@ import org.springframework.data.redis.serializer.SerializationException;
  */
 public class ProtostuffRedisSerializer implements RedisSerializer<Object> {
     private static final byte[] EMPTY = new byte[0];
+
+    private final static Delegate<Timestamp> TIMESTAMP_DELEGATE = new TimestampDelegate();
+    private final static DefaultIdStrategy ID_STRATEGY = ((DefaultIdStrategy) RuntimeEnv.ID_STRATEGY);
+
+    static {
+        ID_STRATEGY.registerDelegate(TIMESTAMP_DELEGATE);
+    }
 
 
     @Override
